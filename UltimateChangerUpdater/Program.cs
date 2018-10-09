@@ -11,31 +11,26 @@ namespace UltimateChangerUpdater
     class Program
     {
         static void Main(string[] args)
+        /* arg 0 - path do update
+         * arg 1 - copyReku
+         * arg 2 - copySettings      
+         * arg 3 - copyUpdater
+         * arg 4 - copyResources  
+         * arg 5 - copyImages
+         * 
+         * dopisac podprogram ktory zrobi kopie updatera po zamknieciu update :
+         *  kopiujemy wszystkie pliki a gdy przychodzi kopia updatera to zamykamy updater i uruchamiamy drugi program z Resources ? 
+         *  gdy kopia się dokona zamykamy i odpalamy UC3 z nowego updatera bez dokonywania update ? nie bedzie problemow z miejscem odpalenia aplikacji chyba ze ten podprogram bedzie w Update
+         *  
+         */
         {
             Console.WriteLine("Update In Progress ...");
             closeUltimateChanger();
-            //deleteOldFiles();            
+            deleteOldFiles();            
             try
-            {
-                //copyNewFiles(args[0]);
+            {               
 
-
-                List<string> listOfFiles = Directory.GetFiles(args[0]).ToList();
-                foreach (var item in listOfFiles)
-                {
-                    try
-                    {
-                        File.Copy(item, $"C:\\Program Files\\UltimateChanger\\{Path.GetFileName(item)}",true); // kopiowanie glownych plikow
-                    }
-                    catch (Exception x)
-                    {
-                        Console.WriteLine(x.ToString());
-                    }
-
-                }
-
-
-                //copyNewFiles(@"\\10.128.3.1\DFS_data_SSC_FS_Images-SSC\PAZE\change_market\Multi_Changer\v_3.0.0_TEST");
+                copyNewFiles(args[0],args[1], args[2], args[3], args[4], args[5]);
             }
             catch (Exception x)
             {
@@ -94,7 +89,7 @@ namespace UltimateChangerUpdater
             }
         }
 
-        public static void copyNewFiles(string from)
+        public static void copyNewFiles(string from,string copyReku , string copySettings, string copyUpdater,string copyResources,string copyImages)
         {
             List<string> listOfFiles = Directory.GetFiles(from).ToList();
             foreach (var item in listOfFiles)
@@ -110,19 +105,90 @@ namespace UltimateChangerUpdater
 
             }
 
-            listOfFiles = Directory.GetFiles(from +"\\reku").ToList();
-            foreach (var item in listOfFiles)
-            {
-                try
-                {
-                    File.Copy(item, $"C:\\Program Files\\UltimateChanger\\reku\\{Path.GetFileName(item)}",true); // kopiowanie rekurencji
-                }
-                catch (Exception x)
-                {
-                    Console.WriteLine(x.ToString());
-                }
+            //dopisanie funkcji na kopiowanie folderow i zawartości w folderze z przelacznikami co dokladnie kopiowac 
 
+            if (copyReku == "true") // kopiowanie rekurencjion
+            {
+                listOfFiles = Directory.GetFiles(from + "\\reku").ToList();
+                foreach (var item in listOfFiles)
+                {
+                    try
+                    {
+                        File.Copy(item, $"C:\\Program Files\\UltimateChanger\\reku\\{Path.GetFileName(item)}", true); // kopiowanie rekurencji
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.ToString());
+                    }
+                }
             }
+
+            if (copySettings == "true")
+            {
+                listOfFiles = Directory.GetFiles(from + "\\Settings").ToList();
+                foreach (var item in listOfFiles)
+                {
+                    try
+                    {
+                        File.Copy(item, $"C:\\Program Files\\UltimateChanger\\Settings\\{Path.GetFileName(item)}", true); // kopiowanie settingow
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.ToString());
+                    }
+                }
+            }
+
+            if (copyUpdater == "true")
+            {
+                listOfFiles = Directory.GetFiles(from + "\\Updater").ToList();
+                foreach (var item in listOfFiles)
+                {
+                    try
+                    {
+                        File.Copy(item, $"C:\\Program Files\\UltimateChanger\\Updater\\{Path.GetFileName(item)}", true); // kopiowanie settingow
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.ToString());
+                    }
+                }
+            }
+
+            if (copyResources == "true")
+            {
+                listOfFiles = Directory.GetFiles(from + "\\Resources").ToList();
+                foreach (var item in listOfFiles)
+                {
+                    try
+                    {
+                        File.Copy(item, $"C:\\Program Files\\UltimateChanger\\Resources\\{Path.GetFileName(item)}", true); // kopiowanie settingow
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.ToString());
+                    }
+                }
+            }
+
+            if (copyImages == "true")
+            {
+                listOfFiles = Directory.GetFiles(from + "\\Images").ToList();
+                foreach (var item in listOfFiles)
+                {
+                    try
+                    {
+                        File.Copy(item, $"C:\\Program Files\\UltimateChanger\\Images\\{Path.GetFileName(item)}", true); // kopiowanie settingow
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.ToString());
+                    }
+                }
+            }
+
+
+
             try
             {
                 //Now Create all of the directories
