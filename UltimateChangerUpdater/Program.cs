@@ -5,13 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+[assembly: System.Reflection.AssemblyVersion("1.0.1.0")]
 namespace UltimateChangerUpdater
 {
     class Program
     {
         static void Main(string[] args)
-        /* arg 0 - path do update
+        /* arg 0 - path do update / "run: - uruchamia UC3 z updatera 
          * arg 1 - copyReku
          * arg 2 - copySettings      
          * arg 3 - copyUpdater
@@ -28,9 +28,18 @@ namespace UltimateChangerUpdater
             closeUltimateChanger();
             deleteOldFiles();            
             try
-            {               
+            {
+                if (args[0] == "run")
+                {
+                    runNewUltimateChanger();
+                    return;
+                }
+                else
+                {
+                    copyNewFiles(args[0], args[1], args[2], args[3], args[4], args[5]);
+                }
 
-                copyNewFiles(args[0],args[1], args[2], args[3], args[4], args[5]);
+               
             }
             catch (Exception x)
             {
@@ -139,21 +148,7 @@ namespace UltimateChangerUpdater
                 }
             }
 
-            if (copyUpdater == "true")
-            {
-                listOfFiles = Directory.GetFiles(from + "\\Updater").ToList();
-                foreach (var item in listOfFiles)
-                {
-                    try
-                    {
-                        File.Copy(item, $"C:\\Program Files\\UltimateChanger\\Updater\\{Path.GetFileName(item)}", true); // kopiowanie settingow
-                    }
-                    catch (Exception x)
-                    {
-                        Console.WriteLine(x.ToString());
-                    }
-                }
-            }
+
 
             if (copyResources == "true")
             {
@@ -204,6 +199,13 @@ namespace UltimateChangerUpdater
             catch (Exception x)
             {
                 Console.WriteLine(x.ToString());
+            }
+
+            if (copyUpdater == "true") // jezeli kopiowanie updatera to uruchamiamy podprogram z obecną tu logika po zamknieciu tego programu a nastepnie uruchamiamy UC3 z nowego updatera - dopisac przelacznik 
+            {
+                CreateShortcut("shortcut Ultimate Changer", @"C:\Program Files\UltimateChanger\", @"C:\Program Files\UltimateChanger\Ultimate Changer.exe");
+                Process.Start(@"C:\Program Files\UltimateChanger\UpdaterCopy.exe", from +" true");
+                return;
             }
 
 
