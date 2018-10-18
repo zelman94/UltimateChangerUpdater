@@ -5,11 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-[assembly: System.Reflection.AssemblyVersion("1.0.1.0")]
+[assembly: System.Reflection.AssemblyVersion("1.0.2.0")]
 namespace UltimateChangerUpdater
 {
     class Program
     {
+
         static void Main(string[] args)
         /* arg 0 - path do update / "run: - uruchamia UC3 z updatera 
          * arg 1 - copyReku
@@ -23,19 +24,24 @@ namespace UltimateChangerUpdater
          *  gdy kopia się dokona zamykamy i odpalamy UC3 z nowego updatera bez dokonywania update ? nie bedzie problemow z miejscem odpalenia aplikacji chyba ze ten podprogram bedzie w Update
          *  
          */
+        
         {
             Console.WriteLine("Update In Progress ...");
+
             closeUltimateChanger();
+            
             deleteOldFiles();            
             try
             {
                 if (args[0] == "run")
-                {
+                    //if ("" == "run")
+                    {
                     runNewUltimateChanger();
                     return;
                 }
                 else
                 {
+                   // copyNewFiles(@"\\10.128.3.1\DFS_data_SSC_FS_Images-SSC\PAZE\change_market\Multi_Changer\v_3.1.1\portable", "true", "true", "true", "true", "true");
                     copyNewFiles(args[0], args[1], args[2], args[3], args[4], args[5]);
                 }
 
@@ -45,10 +51,17 @@ namespace UltimateChangerUpdater
             {
                 Console.WriteLine("Error \n" + x.ToString());
             }
-            CreateShortcut("shortcut Ultimate Changer", @"C:\Program Files\UltimateChanger\", @"C:\Program Files\UltimateChanger\Ultimate Changer.exe");
+            try
+            {
+                CreateShortcut("shortcut Ultimate Changer", @"C:\Program Files\UltimateChanger\", @"C:\Program Files\UltimateChanger\Ultimate Changer.exe");
+            }
+            catch (Exception)
+            {
 
+            }
 
             runNewUltimateChanger();
+         
 
         }
 
@@ -72,27 +85,29 @@ namespace UltimateChangerUpdater
            List<string> listOfFiles = Directory.GetFiles(@"C:\Program Files\UltimateChanger").ToList();
            List<string> listOfFiles_reku = Directory.GetFiles(@"C:\Program Files\UltimateChanger\reku").ToList();
 
-            foreach (var item in listOfFiles)
-            {
-                try
-                {
-                    File.Delete(item);
-                }
-                catch (Exception x)
-                {
-                    Console.WriteLine(x.ToString());                 
-                }
-                
-            }
             foreach (var item in listOfFiles_reku)
             {
                 try
                 {
                     File.Delete(item);
                 }
-                catch (Exception x)
+                catch (Exception)
                 {
-                    Console.WriteLine(x.ToString());
+                    try
+                    {
+                        File.SetAttributes(item, FileAttributes.Normal);
+                        File.Delete(item);
+                    }
+                    catch (UnauthorizedAccessException y)
+                    {
+                        Directory.Delete(@"C:\Program Files\UltimateChanger\reku", true);
+                        listOfFiles_reku = null;
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine("error in deleteOldFiles \n" + x.ToString());
+                    }
+
                 }
 
             }
@@ -105,7 +120,7 @@ namespace UltimateChangerUpdater
             {
                 try
                 {
-                    File.Copy(item, $"C:\\Program Files\\UltimateChanger\\{Path.GetFileName(item)}"); // kopiowanie glownych plikow
+                    File.Copy(item, $"C:\\Program Files\\UltimateChanger\\{Path.GetFileName(item)}",true); // kopiowanie glownych plikow
                 }
                 catch (Exception x)
                 {
@@ -134,6 +149,30 @@ namespace UltimateChangerUpdater
 
             if (copySettings == "true")
             {
+
+
+                List<string> listOfFiles_ = Directory.GetFiles(from + "\\Settings").ToList();
+
+                foreach (var item in listOfFiles_)
+                {
+                    try
+                    {
+                        File.Delete(item);
+                    }
+                    catch (UnauthorizedAccessException y)
+                    {
+                        Directory.Delete(@"C:\Program Files\UltimateChanger\Settings", true);
+                        listOfFiles_ = null;
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.ToString());
+                    }
+
+                }
+
+
+
                 listOfFiles = Directory.GetFiles(from + "\\Settings").ToList();
                 foreach (var item in listOfFiles)
                 {
@@ -152,6 +191,30 @@ namespace UltimateChangerUpdater
 
             if (copyResources == "true")
             {
+
+
+                List<string> listOfFiles_ = Directory.GetFiles(@"C:\Program Files\UltimateChanger\Resources").ToList();
+
+                foreach (var item in listOfFiles_)
+                {
+                    try
+                    {
+                        File.Delete(item);
+                    }
+                    catch (UnauthorizedAccessException y)
+                    {
+                        Directory.Delete(@"C:\Program Files\UltimateChanger\Resources",true);
+                        listOfFiles_ = null;
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.ToString());
+                    }
+
+                }
+
+
+
                 listOfFiles = Directory.GetFiles(from + "\\Resources").ToList();
                 foreach (var item in listOfFiles)
                 {
@@ -168,6 +231,28 @@ namespace UltimateChangerUpdater
 
             if (copyImages == "true")
             {
+
+                List<string> listOfFiles_ = Directory.GetFiles(@"C:\Program Files\UltimateChanger\Images").ToList();
+
+                foreach (var item in listOfFiles_)
+                {
+                    try
+                    {
+                        File.Delete(item);
+                    }
+                    catch (UnauthorizedAccessException y)
+                    {
+                        Directory.Delete(@"C:\Program Files\UltimateChanger\Images", true);
+                        listOfFiles_ = null;
+                    }
+                    catch (Exception x)
+                    {
+                        Console.WriteLine(x.ToString());
+                    }
+
+                }
+
+
                 listOfFiles = Directory.GetFiles(from + "\\Images").ToList();
                 foreach (var item in listOfFiles)
                 {
