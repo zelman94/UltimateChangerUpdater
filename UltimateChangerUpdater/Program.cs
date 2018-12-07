@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-[assembly: System.Reflection.AssemblyVersion("1.0.2.0")]
+[assembly: System.Reflection.AssemblyVersion("1.0.3.0")]
 namespace UltimateChangerUpdater
 {
     class Program
@@ -26,11 +26,14 @@ namespace UltimateChangerUpdater
          */
         
         {
-            Console.WriteLine("Update In Progress ...");
+            Console.WriteLine("Update In Progress ...\n");
 
             closeUltimateChanger();
-            
-            deleteOldFiles();            
+            Console.WriteLine("Ultimate Changer off\n");
+            System.Threading.Thread.Sleep(2000);
+
+            deleteOldFiles();
+            Console.WriteLine("Old Files Deleted\n");
             try
             {
                 if (args[0] == "run")
@@ -41,8 +44,9 @@ namespace UltimateChangerUpdater
                 }
                 else
                 {
-                   // copyNewFiles(@"\\10.128.3.1\DFS_data_SSC_FS_Images-SSC\PAZE\change_market\Multi_Changer\v_3.1.1\portable", "true", "true", "true", "true", "true");
+                    //copyNewFiles(@"\\10.128.3.1\DFS_data_SSC_FS_Images-SSC\PAZE\change_market\Multi_Changer\currentVersion\update", "false", "true", "false", "false", "false");
                     copyNewFiles(args[0], args[1], args[2], args[3], args[4], args[5]);
+                    Console.WriteLine("New Files - Done\n");
                 }
 
                
@@ -54,11 +58,13 @@ namespace UltimateChangerUpdater
             try
             {
                 CreateShortcut("shortcut Ultimate Changer", @"C:\Program Files\UltimateChanger\", @"C:\Program Files\UltimateChanger\Ultimate Changer.exe");
+                Console.WriteLine("Shortcut Ultimate Changer - Done\n");
             }
             catch (Exception)
             {
 
             }
+            System.Threading.Thread.Sleep(2000);
 
             runNewUltimateChanger();
          
@@ -153,28 +159,8 @@ namespace UltimateChangerUpdater
 
                 List<string> listOfFiles_ = Directory.GetFiles(from + "\\Settings").ToList();
 
+                
                 foreach (var item in listOfFiles_)
-                {
-                    try
-                    {
-                        File.Delete(item);
-                    }
-                    catch (UnauthorizedAccessException y)
-                    {
-                        Directory.Delete(@"C:\Program Files\UltimateChanger\Settings", true);
-                        listOfFiles_ = null;
-                    }
-                    catch (Exception x)
-                    {
-                        Console.WriteLine(x.ToString());
-                    }
-
-                }
-
-
-
-                listOfFiles = Directory.GetFiles(from + "\\Settings").ToList();
-                foreach (var item in listOfFiles)
                 {
                     try
                     {
